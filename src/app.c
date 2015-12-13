@@ -6,7 +6,7 @@ static Layer * layer;
 
 static const GPathInfo MODEL = {
   .num_points = 4,
-  .points = (GPoint []) {{0,0}, {0,10}, {10,10}, {10,0}}
+  .points = (GPoint []) {{0,0}, {0,-10}, {-10,-10}, {-10,0}}
 };
 
 void on_layer_update(Layer * layer, GContext * ctx) {
@@ -29,7 +29,7 @@ void on_window_load(Window * window) {
 
   init_model_instance((GPoint) {
     bounds.size.w / 2,
-    bounds.size.h / 2
+    bounds.size.h
   });
 }
 
