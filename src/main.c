@@ -28,4 +28,5 @@ int main() {
 // see this message, a refactor of SDS may be needed.
 void _sbrk() {
   log("_sbrk is undefined!");
+  for (;;);
 }
