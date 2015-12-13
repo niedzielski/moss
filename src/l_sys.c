@@ -7,7 +7,7 @@ seq_t succeed_predecessor(l_sys_t * const l_sys, char predecessor) {
   int predecessor_index = predecessor - PREDECESSOR_OFFSET;
   return predecessor_index < l_sys->successors_len
     ? sdsnew(l_sys->successors[predecessor_index])
-    : sdscatprintf(sdsempty(), "%c", predecessor); // identity production
+    : sdsnewlen(&predecessor, 1); // identity production
 }
 
 seq_t succeed_predecessors(l_sys_t * const l_sys, seq_t predecessors) {
