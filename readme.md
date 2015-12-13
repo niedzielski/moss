@@ -1,3 +1,5 @@
+![Screenshot](screenshot.png)
+
 # moss
 Plant simulator for Pebble watches.
 
