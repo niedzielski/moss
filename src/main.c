@@ -23,3 +23,9 @@ int main() {
   app_event_loop();
   on_deinit();
 }
+
+// HACK: required by vsnprintf() which is unsupported by the Pebble SDK. If you
+// see this message, a refactor of SDS may be needed.
+void _sbrk() {
+  log("_sbrk is undefined!");
+}
