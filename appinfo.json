@@ -2,8 +2,8 @@
   "uuid": "337192e4-4318-4cd5-8420-0ab4a6e280b4",
   "shortName": "moss",
   "longName": "moss",
-  "companyName": "MakeAwesomeHappen",
-  "versionLabel": "1.0",
+  "companyName": "rndmem",
+  "versionLabel": "0.0",
   "sdkVersion": "3",
   "targetPlatforms": ["basalt", "chalk"],
   "watchapp": {
