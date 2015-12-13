@@ -1,6 +1,7 @@
 #pragma once
 
 #include <pebble.h>
+#include "sds.h"
 
 #define log(...) APP_LOG(APP_LOG_LEVEL_DEBUG, __VA_ARGS__);
 #define gcolor(argb) GColorFromRGBA(((argb) >> 16) & 0xff, \
