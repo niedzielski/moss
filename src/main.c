@@ -1,32 +1,15 @@
-#include "global.h"
-#include "app.h"
+/**
+ *  Pebble.js Project main file.
+ */
 
-static Window * window;
+#include <pebble.h>
+#include "simply/simply.h"
 
-static void on_init() {
-  window = window_create();
-  window_set_window_handlers(window, (WindowHandlers) {
-    .load = on_window_load,
-    .unload = on_window_unload,
-  });
-  const bool animated = true;
-  window_stack_push(window, animated);
-}
-
-static void on_deinit() {
-  window_destroy(window);
-  window = NULL;
-}
-
-int main() {
-  on_init();
+/**
+ * By default, we 'simply' load Simply and start running it.
+ */
+int main(void) {
+  Simply *simply = simply_init();
   app_event_loop();
-  on_deinit();
-}
-
-// HACK: required by vsnprintf() which is unsupported by the Pebble SDK. If you
-// see this message, a refactor of SDS may be needed.
-void _sbrk() {
-  log("_sbrk is undefined!");
-  for (;;);
+  simply_deinit(simply);
 }
