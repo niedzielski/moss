@@ -8,5 +8,5 @@ cd -
 
 set -u
 
-waf build
-pebble install --logs --emulator chalk
+pebble build
+pebble install --logs --emulator chalk # --phone 192.168.1.12
