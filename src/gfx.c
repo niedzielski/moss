@@ -10,8 +10,6 @@ void draw_i(GContext * ctx, GPoint origin, int angle, seq_t cmds, int i) {
       int32_t dx = (sin_lookup(rads) * LEN) / TRIG_MAX_RATIO;
       int32_t dy = (cos_lookup(rads) * LEN) / TRIG_MAX_RATIO;
 
-      log("x=%d y=%d dx=%d dy=%d", origin.x, origin.y, (int) dx, (int) dy);
-
       graphics_draw_line(ctx, origin, (GPoint) {origin.x + dx, origin.y + dy});
 
       origin.x += dx;
