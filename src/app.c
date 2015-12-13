@@ -5,18 +5,13 @@ static GPath * model_instance;
 static Layer * layer;
 
 static const GPathInfo MODEL = {
-  .num_points = 6,
-  .points = (GPoint []) {{21, 0}, {14, 26}, {28, 26}, {7, 60}, {14, 34}, {0, 34}}
+  .num_points = 4,
+  .points = (GPoint []) {{0,0}, {0,10}, {10,10}, {10,0}}
 };
 
 void on_layer_update(Layer * layer, GContext * ctx) {
-  // Fill the path:
-  graphics_context_set_fill_color(ctx, gcolor(0xffff0000));
-  gpath_draw_filled(ctx, model_instance);
-
-  // Stroke the path:
   graphics_context_set_stroke_color(ctx, gcolor(0xff00ff00));
-  gpath_draw_outline(ctx, model_instance);
+  gpath_draw_outline_open(ctx, model_instance);
 }
 
 void init_model_instance(GPoint origin) {
