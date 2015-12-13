@@ -8,3 +8,5 @@
                                     ((argb) >>  8) & 0xff, \
                                     ((argb) >>  0) & 0xff, \
                                     ((argb) >> 24) & 0xff)
+
+#define static_assert(x) int static_assert(int static_assert[(x) ? 0 : -1])
