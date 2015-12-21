@@ -1,4 +1,5 @@
 #pragma once
 
-void on_window_load();
-void on_window_unload();
+void on_layer_init(const Layer * layer);
+void on_layer_deinit(const Layer * layer);
+void on_layer_update(Layer * layer, GContext * ctx);

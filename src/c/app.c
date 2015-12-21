@@ -1,38 +1,89 @@
 #include "global.h"
 #include "app.h"
-#include "gfx.h"
 
-#include "l_sys.h"
+typedef GRect bounds_msg_t;
 
-static Layer * layer;
-static GRect win_bounds;
+typedef enum {
+  READY_MSG_TYPE = 0,
+  BOUNDS_MSG_TYPE = 1
+} msg_type_t;
 
-void on_layer_update(Layer * layer, GContext * ctx) {
-  graphics_context_set_stroke_color(ctx, gcolor(0xff00ff00));
+static const Layer * _layer;
 
-  l_sys_t sys = {
-    .axiom = "0",
-    .successors = (seq_t []) {"1[0]0", "11"},
-    .successors_len = 2
-  };
-
-  seq_t succession = succeed(&sys, 6);
-  log("succession=%s", succession);
-
-  draw(ctx, (GPoint) {win_bounds.size.w / 2, win_bounds.size.h}, 180, succession);
-
-  sdsfree(succession);
+// todo: error handling.
+static void send_msg(msg_type_t type, const void * msg, uint16_t size) {
+  DictionaryIterator * iter;
+  if (app_message_outbox_begin(&iter) != APP_MSG_OK) {
+    log("begin fail")
+    return;
+  }
+  dict_write_data(iter, type, (uint8_t *) msg, size);
+  dict_write_end(iter);
+  uint8_t ret = app_message_outbox_send();
+  log("app_message_outbox_send " + (ret == APP_MSG_OK) ? "ok" : "fail=%02x", ret);
 }
 
-void on_window_load(Window * window) {
-  Layer * window_layer = window_get_root_layer(window);
-  win_bounds = layer_get_bounds(window_layer);
-
-  layer = layer_create(win_bounds);
-  layer_set_update_proc(layer, on_layer_update);
-  layer_add_child(window_layer, layer);
+static void on_inbox_msg_receive(DictionaryIterator * iter, void * ctx) {
+  log("inbox receive");
+  bounds_msg_t msg = layer_get_bounds(_layer);
+  log("win origin=%d,%d bounds=%dx%d",
+    msg.origin.x, msg.origin.y, msg.size.w, msg.size.h);
+  send_msg(BOUNDS_MSG_TYPE, &msg, sizeof(msg));
 }
 
-void on_window_unload(Window * window) {
-  layer_destroy(layer);
+static void on_inbox_msg_drop(AppMessageResult reason, void * ctx) {
+  log("inbox drop");
+}
+
+static void on_outbox_msg_sent(DictionaryIterator * iter, void * ctx) {
+  log("outbox sent");
+}
+
+static void on_outbox_msg_fail(DictionaryIterator * iter,
+                               AppMessageResult reason,
+                               void * ctx) {
+  log("outbox fail");
+}
+
+static void enable_msg_callbacks() {
+  uint32_t max_inbound_msg_size = dict_calc_buffer_size(1, 0);
+  uint32_t max_outbound_msg_size = dict_calc_buffer_size(1, sizeof(bounds_msg_t));
+  app_message_open(max_inbound_msg_size, max_outbound_msg_size);
+}
+
+static void disable_msg_callbacks() {
+  app_message_open(0, 0);
+}
+
+static void register_msg_callbacks() {
+  app_message_register_outbox_failed(on_outbox_msg_fail);
+  app_message_register_outbox_sent(on_outbox_msg_sent);
+  app_message_register_inbox_dropped(on_inbox_msg_drop);
+  app_message_register_inbox_received(on_inbox_msg_receive);
+}
+
+static void deregister_msg_callbacks() {
+  app_message_register_inbox_received(NULL);
+  app_message_register_inbox_dropped(NULL);
+  app_message_register_outbox_sent(NULL);
+  app_message_register_outbox_failed(NULL);
+}
+
+void on_layer_init(const Layer * layer) {
+  log("layer init");
+  _layer = layer;
+  register_msg_callbacks();
+  enable_msg_callbacks();
+}
+
+void on_layer_deinit(const Layer * layer) {
+  disable_msg_callbacks();
+  deregister_msg_callbacks();
+  app_message_deregister_callbacks();
+  _layer = NULL;
+  log("layer deinit");
+}
+
+void on_layer_update(Layer * const layer, GContext * ctx) {
+  log("layer update");
 }
