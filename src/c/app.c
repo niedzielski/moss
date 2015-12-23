@@ -17,7 +17,7 @@ static void send_msg(msg_type_t type, const void * msg, uint16_t size) {
     log("begin fail")
     return;
   }
-  dict_write_data(iter, type, (uint8_t *) msg, size);
+  dict_write_data(iter, type, (const uint8_t *) msg, size);
   dict_write_end(iter);
   uint8_t ret = app_message_outbox_send();
   log("app_message_outbox_send " + (ret == APP_MSG_OK) ? "ok" : "fail=%02x", ret);
