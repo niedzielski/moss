@@ -12,7 +12,6 @@ static void on_window_load(Window * win) {
 
 static void on_window_unload(Window * win) {
   on_layer_deinit(window_get_root_layer(_win));
-  _win = NULL;
 }
 
 static void init() {
