@@ -20,7 +20,7 @@ static void send_msg(msg_type_t type, const void * msg, uint16_t size) {
   dict_write_data(iter, type, (const uint8_t *) msg, size);
   dict_write_end(iter);
   uint8_t ret = app_message_outbox_send();
-  log("app_message_outbox_send " + (ret == APP_MSG_OK) ? "ok" : "fail=%02x", ret);
+  log((ret == APP_MSG_OK) ? "app_message_outbox_send ok" : "app_message_outbox_send fail=%02x", ret);
 }
 
 static void on_inbox_msg_receive(DictionaryIterator * iter, void * ctx) {
