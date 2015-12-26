@@ -32,7 +32,7 @@ static void on_inbox_msg_receive(DictionaryIterator * iter, void * ctx) {
 }
 
 static void on_inbox_msg_drop(AppMessageResult reason, void * ctx) {
-  log("inbox drop");
+  log("inbox drop reason=%08x", reason);
 }
 
 static void on_outbox_msg_sent(DictionaryIterator * iter, void * ctx) {
@@ -42,7 +42,7 @@ static void on_outbox_msg_sent(DictionaryIterator * iter, void * ctx) {
 static void on_outbox_msg_fail(DictionaryIterator * iter,
                                AppMessageResult reason,
                                void * ctx) {
-  log("outbox fail");
+  log("outbox fail reason=%08x", reason);
 }
 
 static void enable_msg_callbacks() {
