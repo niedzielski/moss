@@ -23,12 +23,21 @@ static void send_msg(msg_type_t type, const void * msg, uint16_t size) {
   log((ret == APP_MSG_OK) ? "app_message_outbox_send ok" : "app_message_outbox_send fail=%02x", ret);
 }
 
-static void on_inbox_msg_receive(DictionaryIterator * iter, void * ctx) {
-  log("inbox receive");
+static void sendBoundsMsg() {
   bounds_msg_t msg = layer_get_bounds(_layer);
-  log("win origin=%d,%d bounds=%dx%d",
-    msg.origin.x, msg.origin.y, msg.size.w, msg.size.h);
   send_msg(BOUNDS_MSG_TYPE, &msg, sizeof(msg));
+}
+
+static void on_inbox_msg_receive(DictionaryIterator * iter, void * ctx) {
+  uint32_t type = iter->cursor->key;
+  switch (type) {
+    case READY_MSG_TYPE:
+      sendBoundsMsg();
+    break;
+    default:
+      log("unknown msg type=%d", (int) type);
+    break;
+  }
 }
 
 static void on_inbox_msg_drop(AppMessageResult reason, void * ctx) {
