@@ -5,12 +5,12 @@
 typedef struct {
   unsigned read_pos;
   unsigned write_pos;
-  unsigned sizeof_item;
+  unsigned item_size;
   unsigned capacity;
   void * buf;
 } ring_buf_t;
 
-void ring_buf_init(ring_buf_t * ring, unsigned sizeof_item, unsigned capacity, void * buf);
+void ring_buf_init(ring_buf_t * ring, unsigned item_size, unsigned capacity, void * buf);
 void ring_buf_push_back(ring_buf_t * ring, void * item);
 void * ring_buf_pop_front(ring_buf_t * ring);
 void * ring_buf_peek(const ring_buf_t * ring);

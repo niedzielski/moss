@@ -1,16 +1,16 @@
 #include "ring_buf.h"
 
 static void * ptr_at(const ring_buf_t * ring, int pos) {
-  return ring->buf + pos * ring->sizeof_item;
+  return ring->buf + pos * ring->item_size;
 }
 
 static unsigned next_pos(const ring_buf_t * ring, int pos) {
   return (pos + 1) % ring->capacity;
 }
 
-void ring_buf_init(ring_buf_t * ring, unsigned sizeof_item, unsigned capacity, void * buf) {
+void ring_buf_init(ring_buf_t * ring, unsigned item_size, unsigned capacity, void * buf) {
   ring->read_pos = ring->write_pos = 0;
-  ring->sizeof_item = sizeof_item;
+  ring->item_size = item_size;
   ring->capacity = capacity;
   ring->buf = buf;
 }
@@ -20,7 +20,7 @@ void ring_buf_push_back(ring_buf_t * ring, void * item) {
     return;
   }
 
-  memcpy(ptr_at(ring, ring->write_pos), item, ring->sizeof_item);
+  memcpy(ptr_at(ring, ring->write_pos), item, ring->item_size);
   ring->write_pos = next_pos(ring, ring->write_pos);
 }
 
